@@ -87,24 +87,26 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("""
-<style>
+st.markdown(
+    """
+    <style>
 
-/* KPI title */
-[data-testid="stMetricLabel"] p {
-    font-size: 22px !important;
-    font-weight: 700 !important;
-}
+    /* KPI title */
+    [data-testid="stMetricLabel"] p {
+        font-size: 22px !important;
+        font-weight: 700 !important;
+    }
 
-/* KPI value */
-[data-testid="stMetricValue"] {
-    font-size: 34px !important;
-    color: #0b89f7 !important;
-}
+    /* KPI value */
+    [data-testid="stMetricValue"] {
+        font-size: 34px !important;
+        color: #0b89f7 !important;
+    }
 
-</style>
-""", unsafe_allow_html=True)
-
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ---------------------------------------
 # Load Data
@@ -119,7 +121,7 @@ state_data = (
     .first()
     .dropna()
     .mul(100)
-    .round(1)
+    .round(2)
     .reset_index()
 )
 
@@ -212,12 +214,10 @@ bottom_5 = (
     .head(5)
 )
 
-# Highest state
 highest_state = state_data.loc[
     state_data["Projected Average State Increase"].idxmax()
 ]
 
-# Lowest state
 lowest_state = state_data.loc[
     state_data["Projected Average State Increase"].idxmin()
 ]
@@ -241,13 +241,12 @@ national_avg_2026 = (
 # ---------------------------------------
 # 2026 vs 2027 State Comparison
 # ---------------------------------------
-
 state_data_2026 = (
     df_2026.groupby("State")["Projected Average State Increase"]
     .first()
     .dropna()
     .mul(100)
-    .round(1)
+    .round(2)
     .reset_index()
 )
 
@@ -312,11 +311,11 @@ for state, (px, py) in positions.items():
     else:
 
         hover_text.append(
-            f"{state}<br>{value:.1f}%"
+            f"{state}<br>{value:.2f}%"
         )
 
         tile_text.append(
-            f"{state}<br>{value:.1f}%"
+            f"{state}<br>{value:.2f}%"
         )
 
         if value < 15:
@@ -328,7 +327,6 @@ for state, (px, py) in positions.items():
         else:
             colors.append("#FFC60B")
             text_colors.append("black")
-
 
 # ---------------------------------------
 # Create Map Figure
@@ -373,12 +371,12 @@ fig.update_layout(
     template="plotly_white",
     paper_bgcolor="#FFFFFF",
     plot_bgcolor="#FFFFFF",
-    height=500,    # was 500
+    height=500,
     margin=dict(
         l=0,
         r=0,
         t=10,
-        b=0       # increase bottom margin
+        b=0
     )
 )
 
@@ -390,15 +388,10 @@ top_left, top_right = st.columns([5, 1])
 with top_right:
     st.image(str(LOGO_FILE), width=600)
 
-
 # ---------------------------------------
 # Dashboard Layout
 # ---------------------------------------
-
-#----------------------------------------
-#Title
 st.title("2027 Individual Market Projected Average Rate Increases")
-#----------------------------------------
 
 # ---------------------------------------
 # Top KPI Row
@@ -409,33 +402,33 @@ kpi1, kpi2, kpi3, kpi4, spacer = st.columns(
 
 with kpi1:
     st.markdown(
-            f"""
+        f"""
+        <div style="
+            background-color:white;
+            padding:7px;
+            border-radius:10px;
+        ">
             <div style="
-                background-color:white;
-                padding:7px;
-                border-radius:10px;
+                color:#0b89f7;
+                font-size:22px;
+                font-weight:700;
             ">
-                <div style="
-                    color:#0b89f7;
-                    font-size:22px;
-                    font-weight:700;
-                ">
-                    2027 National Average
-                </div>
-                <div style="
-                    color:#2e8b57;
-                    font-size:34px;
-                    font-weight:700;
-                    marigin-top:0px;
-                    marigin-bottom:0px;
-                    line-height:1.2;
-                ">
-                    {avg_rate:.1f}%
-                </div>
+                2027 National Average
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+            <div style="
+                color:#2e8b57;
+                font-size:34px;
+                font-weight:700;
+                margin-top:0px;
+                margin-bottom:0px;
+                line-height:1.2;
+            ">
+                {avg_rate:.1f}%
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 with kpi2:
     st.markdown(
@@ -456,8 +449,8 @@ with kpi2:
                 color:#ff8c00;
                 font-size:34px;
                 font-weight:700;
-                marigin-top:0px;
-                marigin-bottom:0px;
+                margin-top:0px;
+                margin-bottom:0px;
                 line-height:1.2;
             ">
                 {national_avg_2026:.1f}%
@@ -470,13 +463,19 @@ with kpi2:
 with kpi3:
     st.metric(
         "Highest Increase",
-        f"{highest_state['State']} | {highest_state['Projected Average State Increase']:.1f}%"
+        (
+            f"{highest_state['State']} | "
+            f"{highest_state['Projected Average State Increase']:.2f}%"
+        )
     )
 
 with kpi4:
     st.metric(
         "Lowest Increase",
-        f"{lowest_state['State']} | {lowest_state['Projected Average State Increase']:.1f}%"
+        (
+            f"{lowest_state['State']} | "
+            f"{lowest_state['Projected Average State Increase']:.2f}%"
+        )
     )
 
 col_map, col_kpi = st.columns([3, 1])
@@ -520,9 +519,6 @@ with col_map:
             hide_index=True,
             use_container_width=True
         )
-
-
-
 
 with col_kpi:
 
