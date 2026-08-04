@@ -2,18 +2,11 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 import base64
-from pathlib import Path
 
 # ==================================================
 # Page Setup
 # ==================================================
 st.set_page_config(layout="wide")
-
-# Resolve bundled files relative to this script so deployment does not depend
-# on the process working directory.
-APP_DIR = Path(__file__).resolve().parent
-DATA_FILE = APP_DIR / "2027 IFP Projected Rate Changes.xlsx"
-LOGO_FILE = APP_DIR / "zizzlhealth_logo.png"
 
 # ---------------------------------------
 # Branding
@@ -110,7 +103,7 @@ st.markdown("""
 # Load Data
 # ---------------------------------------
 df = pd.read_excel(
-    DATA_FILE,
+    "2027 IFP Projected Rate Changes.xlsx",
     sheet_name="2027"
 )
 
@@ -226,7 +219,7 @@ lowest_state = state_data.loc[
 # 2026 National Average
 # ---------------------------------------
 df_2026 = pd.read_excel(
-    DATA_FILE,
+    "2027 IFP Projected Rate Changes.xlsx",
     sheet_name="2026"
 )
 
@@ -382,13 +375,13 @@ fig.update_layout(
     )
 )
 
-with LOGO_FILE.open("rb") as f:
+with open("zizzlhealth_logo.png", "rb") as f:
     encoded_logo = base64.b64encode(f.read()).decode()
 
 top_left, top_right = st.columns([5, 1])
 
 with top_right:
-    st.image(str(LOGO_FILE), width=600)
+    st.image("zizzlhealth_logo.png", width=600)
 
 
 # ---------------------------------------
