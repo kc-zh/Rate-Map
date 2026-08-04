@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import base64
 from pathlib import Path
 
 # ==================================================
@@ -13,13 +14,6 @@ st.set_page_config(layout="wide")
 APP_DIR = Path(__file__).resolve().parent
 DATA_FILE = APP_DIR / "2027 IFP Projected Rate Changes.xlsx"
 LOGO_FILE = APP_DIR / "zizzlhealth_logo.png"
-
-missing_files = [path.name for path in (DATA_FILE, LOGO_FILE) if not path.exists()]
-if missing_files:
-    st.error(
-        "Missing required repository file(s): " + ", ".join(missing_files)
-    )
-    st.stop()
 
 # ---------------------------------------
 # Branding
@@ -388,6 +382,9 @@ fig.update_layout(
     )
 )
 
+with LOGO_FILE.open("rb") as f:
+    encoded_logo = base64.b64encode(f.read()).decode()
+
 top_left, top_right = st.columns([5, 1])
 
 with top_right:
@@ -481,6 +478,8 @@ with kpi4:
         "Lowest Increase",
         f"{lowest_state['State']} | {lowest_state['Projected Average State Increase']:.1f}%"
     )
+
+col_map, col_kpi = st.columns([3, 1])
 
 col_map, col_kpi = st.columns([4, 1])
 
